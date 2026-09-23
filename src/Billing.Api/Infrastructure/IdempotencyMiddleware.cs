@@ -1,3 +1,4 @@
+using Billing.Api.Domain;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
@@ -60,11 +61,10 @@ public sealed class IdempotencyMiddleware(RequestDelegate next)
         await buffer.CopyToAsync(originalBody);
         context.Response.Body = originalBody;
 
-        if (context.Response.StatusCode is >= 200 and < 300)
-        {
-            var ttl = TimeSpan.FromHours(Math.Max(1, options.Value.IdempotencyTtlHours));
-            store.Set(cacheKey, requestHash, context.Response.StatusCode, context.Response.ContentType ?? "application/json", responseBody, ttl);
-        }
+        // Cache every response we saw, not just successes, so a client that retries
+        // with the same Idempotency-Key never re-runs a side effect twice.
+        var ttl = TimeSpan.FromHours(Math.Max(1, options.Value.IdempotencyTtlHours));
+        store.Set(cacheKey, requestHash, context.Response.StatusCode, context.Response.ContentType ?? "application/json", responseBody, ttl);
     }
 
     private static bool RequiresIdempotency(HttpRequest request) =>

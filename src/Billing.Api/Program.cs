@@ -140,7 +140,7 @@ api.MapPost("/coupons", (CreateCouponRequest request, BillingStore store, IBilli
 
     try
     {
-        var amountOff = request.AmountOff is null ? null : Money.FromMajor(request.AmountOff.Value, NormalizeCurrency(request.Currency));
+        var amountOff = request.AmountOff is null ? (Money?)null : Money.FromMajor(request.AmountOff.Value, NormalizeCurrency(request.Currency));
         var coupon = new Coupon(Guid.NewGuid(), request.Code.Trim().ToUpperInvariant(), request.Name.Trim(), request.PercentOff, amountOff, request.ExpiresAt, clock.UtcNow);
         return Results.Created($"/api/coupons/{coupon.Id}", store.AddCoupon(coupon));
     }
