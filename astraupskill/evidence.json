@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "verifiedAt": "2026-09-12T12:29:41.709784+00:00",
+  "backendAndHttpTests": 66,
+  "browserWorkflowChecks": 15,
+  "packagingChecks": 3,
+  "totalChecks": 84,
+  "browserChecks": [
+    "Published package serves the real React application and static assets",
+    "Browser registration creates a private workspace and authenticated session",
+    "Session credentials are absent from local storage, session storage and cookies",
+    "Customer creation persists through the browser form",
+    "Stale edit is rejected, the draft survives, and explicit reload allows a reviewed edit",
+    "A response lost after commit retries the same operation and creates exactly one customer",
+    "Deletion requires confirmation and removes an unused record",
+    "Plan and coupon forms persist typed pricing and discount contracts",
+    "Related record selectors create a subscription and correctly timed usage",
+    "Billing creates the expected USD 25 subtotal, USD 5 discount and USD 20 invoice",
+    "Payment controls preserve a decline, succeed a new attempt, and simulate the durable outbox",
+    "Server pagination and search agree on counts and reset the page offset",
+    "Viewer sign-in renders read-only controls and hides owner membership actions",
+    "Desktop and narrow layouts render without horizontal overflow",
+    "No uncaught browser JavaScript errors occurred"
+  ],
+  "packaging": [
+    "Published browser assets exactly match the final Vite build",
+    "Published package contains no application database or App_Data files",
+    "Backend, test and frontend dependency lock files exist"
+  ],
+  "quality": {
+    "passed": true,
+    "checks": [
+      {
+        "command": [
+          "C:\\Users\\Owner\\AppData\\Roaming\\Python\\Python313\\Scripts\\ruff.exe",
+          "check",
+          "C:\\Users\\Owner\\Desktop\\AstraOrganized2\\astra-remaining-improvements\\stage\\af19f6e32dba\\tests\\browser_smoke.py"
+        ],
+        "exitCode": 0,
+        "output": "All checks passed!\n"
+      },
+      {
+        "command": [
+          "C:\\Users\\Owner\\AppData\\Roaming\\Python\\Python313\\Scripts\\ruff.exe",
+          "format",
+          "--check",
+          "C:\\Users\\Owner\\Desktop\\AstraOrganized2\\astra-remaining-improvements\\stage\\af19f6e32dba\\tests\\browser_smoke.py"
+        ],
+        "exitCode": 0,
+        "output": "1 file already formatted\n"
+      }
+    ],
+    "pythonSyntax": "passed"
+  },
+  "dependencyAudits": "npm full installed tree and NuGet API transitive tree reported no known advisories at verification time.",
+  "screenshotsReviewed": {
+    "passed": true,
+    "browserRun": "browser-02",
+    "images": [
+      "desktop.png",
+      "narrow.png"
+    ],
+    "viewports": [
+      "1440 x 1050",
+      "390 x 844"
+    ],
+    "observations": [
+      "Desktop navigation, metrics, simulator controls and paginated record rows are aligned and readable.",
+      "Narrow layout stacks metrics and controls, wraps navigation into three columns and keeps record actions visible without horizontal overflow.",
+      "Visible text is correctly encoded; status and action labels are legible with no overlapping controls.",
+      "Screenshots show fictional data from the final passing packaged-browser run."
+    ]
+  },
+  "originalDatabaseOpened": false,
+  "realPaymentsOrExternalMessages": false,
+  "originalTextFilesPreserved": 125,
+  "limitations": [
+    "Loopback-only single-node SQLite simulator; no public deployment, real payment provider, outgoing HTTP delivery or automatic billing scheduler.",
+    "USD/EUR/GBP only; no taxes, proration, refunds, credit notes or currency conversion.",
+    "Relational identity/relationship tables wrap immutable JSON records; some internal workflows materialize bounded collections. Limit: 5,000 domain records per workspace.",
+    "Eight-hour in-memory browser session, 24-hour durable operation receipts; pending browser retry state is lost when the tab closes. Auth registration/login are outside the receipt protocol.",
+    "Owner/Operator/Viewer membership management is implemented, but no password-change/recovery flow, invitation email, federated identity, existing-account workspace linking or owner transfer.",
+    "Original data was not opened or replaced. Unknown database files are refused; migration requires separate reviewed work or a new learning database path.",
+    "Provider callback signatures use a custom local HMAC protocol, not Stripe compatibility. Audit and provider-event history have no retention UI.",
+    "Historical documentation is labeled and preserved; proposed course exercises are not counted as implemented functionality."
+  ]
+}
