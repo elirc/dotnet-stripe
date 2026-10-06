@@ -12,7 +12,18 @@ The endpoint verifies:
 - `X-Webhook-Signature`: HMAC SHA-256 hex digest.
 - Signed payload: `{timestamp}.{rawBody}`.
 - Secret: `Billing:WebhookSigningSecret`.
-- Timestamp tolerance: five minutes.
+- Timestamp tolerance: five minutes **into the past only**. The check is `DateTimeOffset.UtcNow - timestamp > 5 min`
+  (`src/Billing.Api/Infrastructure/WebhookSignatureVerifier.cs:25`), so a timestamp in the *future* is never
+  rejected. A captured, validly signed request with a far-future timestamp can be replayed indefinitely. A
+  symmetric check (`Math.Abs` of the difference) closes that.
+
+What the endpoint does **not** do (verified 2026-10-06 against `src/Billing.Api/Program.cs:223-250`):
+
+- It doesn't deduplicate on `eventId`. The id is echoed in the response (line 244) and never stored, so a
+  provider retry applies the payment result again (`training/_answers/review.md` finding 2).
+- It doesn't require the `Idempotency-Key` header used in the example below. `IdempotencyMiddleware` lets
+  requests without that header straight through (`IdempotencyMiddleware.cs:17-21`), and real providers don't
+  send it.
 
 Example payload:
 

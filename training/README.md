@@ -4,8 +4,13 @@
 characterization-tests exercise, and a small interview kit (no ladder/navigation/agentic
 phases — those are LAB-tier only).
 
-Batch: B01. Prior audit: `Desktop\opusorganize\portfolio-audit\projects\batch-01.md`
-(search "SubscriptionBillingDashboard").
+Batch: B01. Prior audit: an external report in the author's workspace (`opusorganize/portfolio-audit/projects/batch-01.md`,
+not in this repo).
+
+> **Status (checked 2026-10-06):** both incident branches exist on the remote (`git branch -r` lists
+> `origin/training/incidents/001-idempotency-caches-failures` and `origin/training/incidents/002-mrr-rounding-drift`),
+> and each carries the two build fixes plus its planted change. `main` still doesn't compile (finding 0), and there is
+> still no test project. Neither was changed by this check.
 
 ## Suggested order (~4-5 hours total)
 
@@ -54,5 +59,5 @@ incident; don't mistake them for part of the puzzle.
   `002-mrr-rounding-drift.md`.
 
 No `ladder/`, `navigation/`, or `agentic/` directories — those are LAB-tier phases and
-this project didn't get that tier (see the report at
-`Desktop\opusorganize\batch1report\projects\netstripe.md` for the reasoning).
+this project didn't get that tier (the reasoning is in an external batch report in the author's workspace,
+`opusorganize/batch1report/projects/netstripe.md`, not in this repo).

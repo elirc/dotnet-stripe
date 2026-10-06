@@ -52,7 +52,7 @@ exact in base 10, but it lets fractional cents flow silently through totals. A `
 ## 4. Invoicing the `scale` subscription
 - **Usage:** 8 events, each `18_000 + i × 2_500` for i = 0…7 (`BillingStore.cs:316-320`). The total is
   8 × 18,000 + 2,500 × (0 + 1 + … + 7) = 144,000 + 70,000 = **214,000**. All of them fall between `now-20d` and `now-6d`,
-  which is inside the period `[now-30d, now+1d)`.
+  which is inside the period `*now-30d, now+1d)`.
 - **Billable units:** 214,000 − 100,000 = **114,000**.
 - **Lines** (the plan is `Hybrid`, so it gets both lines):
   1. `"Scale Usage monthly subscription"`, quantity 1, amount **24,900** (that's $249.00).
@@ -97,7 +97,7 @@ The line numbers below are file lines in `IdempotencyMiddleware.cs`.
 **Bonus:** the handler runs **twice**. `TryGet` (line 35) and `Set` (line 66) each take the lock separately, and nothing
 reserves the key while the first request is still running (lines 51-55). Both requests miss the cache and both run
 `QueuePayment`. The fix is an "in-flight" placeholder that's set atomically on the first miss. See
-[02 Idempotency](../../../opusorganize/apprenticeship/curriculum/02-idempotency.md).
+[02 Idempotency* (external apprenticeship note, not in this repo).
 
 ## 7. Webhook signature
 | Case | Result | Why |

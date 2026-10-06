@@ -17,6 +17,19 @@ It teaches two things at once:
 > very first exercise is to run it yourself and confirm. See
 > [08-reference/verification-log.md](08-reference/verification-log.md).
 
+> **Status (re-checked 2026-10-06 by reading source; nothing run):** two facts change how you use this suite.
+> 1. **`main` does not compile**, so "run it yourself and confirm" fails at step one. There are two one-line
+>    errors: CS0246 in `src/Billing.Api/Infrastructure/IdempotencyMiddleware.cs` (it uses `IBillingClock` at line 90
+>    without `using Billing.Api.Domain;`) and CS0173 at `src/Billing.Api/Program.cs:143` (`cond ? null : Money...`,
+>    where `Money` is a non-nullable struct; write `(Money?)null`). Make both edits on a scratch branch before any
+>    `dotnet run` in this suite. `learn/README.md` Session 1 turns this into an exercise, and
+>    `training/_answers/review.md` finding 0 documents it.
+> 2. The repo now has git history and two pushed training branches (`origin/training/incidents/001-*`, `002-*`), so
+>    the "zero git commits" provenance below is out of date. There are still **no tests and no CI workflow**.
+>
+> Where this suite and `training/_answers/review.md` disagree, the review was written later and with the compile
+> errors in view.
+
 ## Repo identity (the 6-sentence version)
 
 The **Subscription Billing Dashboard** is a Stripe/Chargebee-style billing backend plus a React

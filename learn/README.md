@@ -17,8 +17,8 @@ tests" shape, but it adds money arithmetic, idempotency, webhooks and background
   incidents and a mini interview kit. This `learn/` folder is the on-ramp to it.
 
 ## Known state of main
-**`main` does not compile.** Source: `Desktop\opusorganize\batch1report\projects\netstripe.md` §Verification, and
-`training/_answers/review.md` finding 0. There are two independent errors:
+**`main` does not compile.** Source: `training/_answers/review.md` finding 0 (and an external batch report in the author's
+workspace, not in this repo). There are two independent errors. Both were re-confirmed by reading the source on 2026-10-06:
 - **CS0246** in `src/Billing.Api/Infrastructure/IdempotencyMiddleware.cs`: `IdempotencyStore(IBillingClock clock)` at
   line 90 needs `using Billing.Api.Domain;`, which the file doesn't have.
 - **CS0173** at `src/Billing.Api/Program.cs:143`: `var amountOff = request.AmountOff is null ? null : Money.FromMajor(...)`.
@@ -26,23 +26,42 @@ tests" shape, but it adds money arithmetic, idempotency, webhooks and background
 
 The repo's own `README.md:66` admits nobody ever compiled it. The 93-file `docs/` and `docs2/` curricula were written
 against this code without running it. Treat them as hypotheses, not facts
-([05 Verify before trust](../../opusorganize/apprenticeship/curriculum/05-verify-before-trust.md)).
+(*05 Verify before trust* (external apprenticeship note, not in this repo)).
 
 Both incident branches also carry the two one-line build fixes. On branch 001 they're bundled into `8b0c838`. On branch
-002 the `Program.cs` fix rides in `dd2875b` and the `using` is its own commit, `bfce8de`. Both branches build with 0
-errors on SDK 10.0.302. Those fixes aren't part of either puzzle. **This learn pass doesn't fix
+002 the `Program.cs` fix rides in `dd2875b` and the `using` is its own commit, `bfce8de`. The author reports both branches
+building with 0 errors on SDK 10.0.302 (not re-run in the 2026-10-06 check, which only confirmed that both branches
+exist on the remote and carry those two diffs). Those fixes aren't part of either puzzle. **This learn pass doesn't fix
 `main`.** Session 1 makes you diagnose the errors and fix them on your own scratch branch.
 
+## Two referenced files that don't exist (status 2026-10-06)
+Sessions 1, 3, 5, 6 and 7 below refer to **`learn/01-agentic-practice.md`** (Drills A-D) and Session 7 to
+**`training/tickets/M1-webhook-event-dedup.md`**. Neither file exists in this repository, on any branch (`git log --all`
+finds no trace of either). Use these substitutes, which the sessions already contain enough detail to support:
+- **Drill A (Session 1):** Session 1's own exit criteria are the checklist: exactly 2 changed lines in 2 files
+  (`using Billing.Api.Domain;` at the top of `IdempotencyMiddleware.cs`; `(Money?)null` in `Program.cs:143`), no
+  `#pragma`/`NoWarn` suppression, and no other edits. The incident branches contain the same two fixes, so
+  `git diff main origin/training/incidents/002-mrr-rounding-drift -- src/Billing.Api/Program.cs src/Billing.Api/Infrastructure/IdempotencyMiddleware.cs`
+  shows a known-good answer *after* you've written yours.
+- **Drill B (Session 5):** grade the agent's tests against Session 5's "Do by hand" list (fake `IBillingClock`, literal
+  expected values, IDs you picked) and the setup block in `training/review/characterization-tests-billingengine.md`.
+- **Drills C and D (Session 6):** the regression-test requirements are in Session 6's exit criterion (fails on the
+  incident branch, passes after the fix); the fix direction is in `training/_answers/00N-*.md`, so open those only after
+  your own diagnosis.
+- **M1 ticket (Session 7):** use `training/_answers/review.md` finding 2 ("Payment-provider webhook has no event-level
+  idempotency") as the ticket. Its evidence and fix direction match Session 7's exit criterion. The endpoint is
+  `Program.cs:223-250`; `payload.EventId` is echoed at line 244 and never checked.
+
 ## Prerequisites
-1. **Everything in `Desktop\.netramp\learn\`** (DI lifetimes, request tracing, a first xUnit test). If you haven't done
-   it, go back.
+1. **Everything in the `.netramp` repo's `learn/` folder** (DI lifetimes, request tracing, a first xUnit test). If you
+   haven't done it, go back.
 2. **Records and `with`, structs versus classes, `Nullable<T>`.** Read `src/Billing.Api/Domain/BillingModels.cs`
    (every entity is an immutable `sealed record`) and `Domain/Money.cs`. On-ramp exercises 1 and 3 check this.
 3. **Minimal API parameter binding** (route, body and DI parameters in one lambda). Read `Program.cs:67-83` and
    `Program.cs:211-221`. On-ramp exercise 2 checks this.
-4. **Idempotency keys and duplicate delivery.** Read [02 Idempotency](../../opusorganize/apprenticeship/curriculum/02-idempotency.md).
-5. **Money rounding.** Read [20 Money and time](../../opusorganize/apprenticeship/curriculum/20-money-and-time.md), the money sections.
-6. (Needed for Session 7) **Check-then-act races.** Read [03 Concurrency races](../../opusorganize/apprenticeship/curriculum/03-concurrency-races.md).
+4. **Idempotency keys and duplicate delivery.** Read *02 Idempotency* (external apprenticeship note, not in this repo).
+5. **Money rounding.** Read *20 Money and time* (external apprenticeship note, not in this repo), the money sections.
+6. (Needed for Session 7) **Check-then-act races.** Read *03 Concurrency races* (external apprenticeship note, not in this repo).
 
 ## Study route
 Total: about 10–12 hours over 8 sessions. Keep both `learn/_answers/` and `training/_answers/` closed until the
@@ -71,7 +90,10 @@ session tells you to open them.
 - **Files/branches:** `learn/00-onramp.md` exercises 5–8, then the setup block of `training/review/characterization-tests-billingengine.md`.
 - **Do by hand:** the traces in 5–7, and the list of `Money` test cases in exercise 8.
 - **Delegate, then verify:**
-  - Have an agent create `src/Billing.Api.Tests` and add it to the `.sln`.
+  - Have an agent create `src/Billing.Api.Tests` and add it to the `.sln`. (This matches
+    `training/review/characterization-tests-billingengine.md`. `docs2/05-quality-engineering/02-writing-tests-here.md`
+    puts it at `tests/Billing.Api.Tests` instead. Either works; pick one and say which in your PR. If you later want
+    `WebApplicationFactory<Program>` tests, `Program.cs` needs a `public partial class Program;` line, as docs2 explains.)
   - Check that it references `Billing.Api`, and that it builds only because of your Session 1 fix.
 - **Exit criterion:**
   - Your `Money` tests pass.
@@ -131,5 +153,5 @@ session tells you to open them.
   - why `EventId` dedup must be "mark and process atomically".
 
 ## Next repo
-**`Desktop\netauth`.** It's an OIDC identity provider, and it's the security specialty of this route. It's another
+**`netauth`** (published as `dotnet-auth`). It's an OIDC identity provider, and it's the security specialty of this route. It's another
 `main` that doesn't compile, this time because of a hallucinated EF Core API, and it adds an SDK-pinning problem.

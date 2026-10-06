@@ -1,5 +1,13 @@
 # Architecture
 
+> **Status (2026-10-06):** this is the original design note. Two things it doesn't say: `main` doesn't compile as
+> committed (two one-line errors; see `training/_answers/review.md` finding 0 or `docs2/00-fast-track.md` step 1),
+> and there are no tests and no CI workflow. The idempotency section is accurate but incomplete: only 2xx
+> responses are cached (`IdempotencyMiddleware.cs:63-67`), requests *without* an `Idempotency-Key` header bypass the
+> middleware entirely (lines 17-21), and two concurrent first requests with the same key both run the handler. The
+> store is checked at line 35, but nothing is reserved until line 66.
+
+
 ## Backend
 
 `Billing.Api` is a dependency-free .NET 8 minimal API.

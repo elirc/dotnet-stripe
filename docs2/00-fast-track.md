@@ -15,6 +15,12 @@ seed data in [BillingStore.Seed](../src/Billing.Api/Infrastructure/BillingStore.
 
 ## 1. Install & run (do this first)
 
+> **Status (2026-10-06): this step fails on `main` as committed.** `dotnet run` stops at two compile errors (CS0246 in
+> `Infrastructure/IdempotencyMiddleware.cs`, CS0173 at `Program.cs:143`). On a scratch branch, add
+> `using Billing.Api.Domain;` as the first line of `IdempotencyMiddleware.cs` and change `? null :` to
+> `? (Money?)null :` on `Program.cs:143`. Then continue. Explaining *why* each fix works is `learn/00-onramp.md`
+> exercise 1; don't skip it.
+
 Prerequisites (per [README.md](../README.md#L14-L19)): **.NET SDK 8+** and **Node 20+**.
 
 **Backend** — `[inferred]` (correct per [Billing.Api.csproj](../src/Billing.Api/Billing.Api.csproj#L3) and [launchSettings.json](../src/Billing.Api/Properties/launchSettings.json#L8)):
@@ -132,7 +138,7 @@ represent values like `$0.10` exactly, so summing many line items drifts — int
   See [03/04](03-architecture-and-patterns/04-side-effects-async-and-reliability.md).
 - **The latent currency bug** — the dashboard math assumes USD; a non-USD plan can throw. See
   [risk-register R-01](08-reference/risk-register.md).
-- **Tests** — there are none. You'll write the first ones in
+- **Tests** — there are none (no test project, no CI workflow; re-checked 2026-10-06). You'll write the first ones in
   [05/02-writing-tests-here.md](05-quality-engineering/02-writing-tests-here.md).
 
 ## Verification Notes
